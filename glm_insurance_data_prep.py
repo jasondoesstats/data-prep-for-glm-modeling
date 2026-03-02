@@ -1,13 +1,10 @@
-# GLM INSURANCE ANALYTICS DATA PREP FOR MODELING
-
+# GLM Insurance Analytics Data Prep for Modeling 
 
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy import stats
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import statsmodels.api as sm
 
 # Set style
@@ -36,7 +33,7 @@ df['vehicle_value'] = df.groupby('vehicle_type')['vehicle_value'].transform(
 )
 df['policy_tenure'].fillna(df['policy_tenure'].median(), inplace=True)
 
-# Create CA-insurance features before encoding
+# Create CA insurance features before encoding (binning) 
 df['age_band'] = pd.cut(df['age'], 
                         bins=[0, 25, 35, 50, 65, 100],
                         labels=['16-25', '26-35', '36-50', '51-65', '65+'])
@@ -58,9 +55,9 @@ cat_vars = ['gender', 'marital_status', 'vehicle_type', 'coverage_type',
 
 df_encoded = pd.get_dummies(df, columns=cat_vars, drop_first=True, dtype=int)
 
-# 4. Create features and target
+# Create features and target
 X = df_encoded.drop(['policy_id', 'claim_amount'], axis=1)
 y = df_encoded['claim_amount']
 
-# 5. Verify all elements are numeric
+# Verify all elements are numeric
 assert X.select_dtypes(include=['int64', 'float64']).shape[1] == X.shape[1], "Not all features are numeric!"
